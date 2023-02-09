@@ -13,9 +13,9 @@ describe("tester API users", () => {
   const MOCK_DATA = [
     {
       _id: USER_ID,
-      name: "ana",
-      email: "nfegeg@gmail.com",
-      password: "azertyuiop",
+      name: "adri",
+      email: "adri@gmail.com",
+      password: "cocotte25",
     },
   ];
   const MOCK_DATA_CREATED = {
