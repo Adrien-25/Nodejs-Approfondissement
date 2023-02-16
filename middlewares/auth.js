@@ -9,7 +9,8 @@ module.exports = async (req, res, next) => {
       throw "not token";
     }
     const decoded = jwt.verify(token, config.secretJwtToken);
-    const user = await User.findById(decoded.id);
+    const userId = decoded.userId;
+    // const user = await User.findById(decoded.id);
     req.user = decoded;
     next();
   } catch (message) {

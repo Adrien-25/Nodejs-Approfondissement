@@ -1,4 +1,4 @@
-const User = require("./articles.schema");
+const User = require("./articles.model");
 const bcrypt = require("bcrypt");
 
 class ArticleService {
