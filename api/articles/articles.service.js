@@ -5,6 +5,9 @@ class ArticleService {
         const article = new Article(data);
         return article.save();
     }
+    get(id) {
+        return Article.findById(id);
+    }
     update(id, data) {
         return Article.findByIdAndUpdate(id, data, { new: true });
     }

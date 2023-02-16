@@ -5,6 +5,18 @@ const config = require("../../config");
 const articlesService = require("./articles.service");
 
 class ArticlesController {
+  async getById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const article = await articlesService.get(id);
+      if (!article) {
+        throw new NotFoundError();
+      }
+      res.json(article);
+    } catch (err) {
+      next(err);
+    }
+  }
   async create(req, res, next) {
     try {
       const decoded = jwt.verify(
