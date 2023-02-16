@@ -3,6 +3,8 @@ const UnauthorizedError = require("../../errors/unauthorized");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const articlesService = require("./articles.service");
+const usersService = require("../users/users.service");
+
 
 class ArticlesController {
   async getById(req, res, next) {
@@ -42,6 +44,10 @@ class ArticlesController {
       const userId = decoded.userId;
       const id = req.params.id;
       const article = await articlesService.get(id);
+      const user = await usersService.get(userId);
+      if (user.role !== 'admin') {
+        throw new UnauthorizedError();
+      }
       if (!article) {
         throw new NotFoundError();
       }
