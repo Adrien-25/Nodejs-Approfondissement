@@ -51,7 +51,7 @@ class ArticlesController {
       if (!article) {
         throw new NotFoundError();
       }
-      if (article.user.toString() !== userId && !req.user.isAdmin) {
+      if (article.user.toString() !== userId) {
         throw new UnauthorizedError();
       }
       const updatedArticle = await articlesService.update(id, req.body);
@@ -78,7 +78,7 @@ class ArticlesController {
       if (!article) {
         throw new NotFoundError();
       }
-      if (article.user.toString() !== userId && !req.user.isAdmin) {
+      if (article.user.toString() !== userId) {
         throw new UnauthorizedError();
       }
       await articlesService.delete(id);
