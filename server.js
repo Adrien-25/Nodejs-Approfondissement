@@ -30,6 +30,8 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+app.get("/api/users/:userId/articles", usersController.getUserArticles);
+
 // app.use("/api/users", userRouter);
 app.use("/api/users", authMiddleware, userRouter);
 app.post("/login", usersController.login);

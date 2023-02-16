@@ -14,6 +14,9 @@ class ArticleService {
     delete(id) {
         return Article.deleteOne({ _id: id });
     }
+    getArticles(userId){
+        return Article.find({ user: userId }).populate("user", "-password");
+    }
 }
 
 module.exports = new ArticleService();
