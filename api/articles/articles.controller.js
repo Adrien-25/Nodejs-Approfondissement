@@ -1,6 +1,5 @@
 const NotFoundError = require("../../errors/not-found");
 const UnauthorizedError = require("../../errors/unauthorized");
-const Unauthorized = require("../../errors/unauthorized");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const articlesService = require("./articles.service");
@@ -9,7 +8,7 @@ class ArticlesController {
   async create(req, res, next) {
     try {
       const decoded = jwt.verify(
-        req.headers.authorization.split(" ")[1],
+        req.headers["x-access-token"],
         config.secretJwtToken
       );
       const userId = decoded.userId;
@@ -25,7 +24,7 @@ class ArticlesController {
   async update(req, res, next) {
     try {
       const decoded = jwt.verify(
-        req.headers.authorization.split(" ")[1],
+        req.headers["x-access-token"],
         config.secretJwtToken
       );
       const userId = decoded.userId;
@@ -35,7 +34,7 @@ class ArticlesController {
         throw new NotFoundError();
       }
       if (article.user.toString() !== userId && !req.user.isAdmin) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       const updatedArticle = await articlesService.update(id, req.body);
       req.io.emit("article:update", article);
@@ -48,7 +47,7 @@ class ArticlesController {
   async delete(req, res, next) {
     try {
       const decoded = jwt.verify(
-        req.headers.authorization.split(" ")[1],
+        req.headers["x-access-token"],
         config.secretJwtToken
       );
       const userId = decoded.userId;
@@ -59,7 +58,7 @@ class ArticlesController {
         throw new NotFoundError();
       }
       if (article.user.toString() !== userId && !req.user.isAdmin) {
-        throw new Unauthorized();
+        throw new UnauthorizedError();
       }
       await articlesService.delete(id);
       res.status(204).send();

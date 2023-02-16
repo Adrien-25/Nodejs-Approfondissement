@@ -1,5 +1,4 @@
-const User = require("./articles.model");
-const bcrypt = require("bcrypt");
+const Article = require("./articles.model");
 
 class ArticleService {
     create(data) {
