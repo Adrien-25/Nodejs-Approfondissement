@@ -13,40 +13,32 @@ const usersService = require("../api/users/users.service");
 describe("Tester API articles", () => {
     let token;
     const USER_ID = "63edf633c9903d78625f92a5";
-    // const USER_ID = "fake";
+    let createdArticle={id:""};
+
     const MOCK_ARTICLE_CREATED = {
+        // createdArticleId: createdArticleId,
         title: "Test article",
         content: "This is a test article",
         user: USER_ID,
         status: "draft"
     };
-    const MOCK_DATA = [
-        {
-            _id: USER_ID,
-            name: "fdp",
-            email: "ntm@aa.net",
-            password: "fdpntmfdpntm",
-            role:"admin"
-        },
-    ];
-    const MOCK_DATA_CREATED = {
-        name: "test",
-        email: "test@test.net",
-        password: "azertyuiop",
-        role:"admin"
-      };
+    const updatedArticle = {
+        title: "Nouveau titre",
+        content: "Nouveau contenu",
+        status: "draft"
+    };
 
     beforeEach(() => {
         token = jwt.sign({ userId: USER_ID }, config.secretJwtToken);
-        // mockingoose(Article).toReturn(MOCK_ARTICLE_CREATED, "find");
-        // mockingoose(User).toReturn(MOCK_DATA, "find");
-        // mockingoose(Article).toReturn(MOCK_ARTICLE_CREATED, "findByIdAndUpdate");
-        // mockingoose(User).toReturn(MOCK_DATA_CREATED, "save");
-        mockingoose(Article).toReturn(MOCK_ARTICLE_CREATED, "find");
+        // const mockArticle = { MOCK_ARTICLE_CREATED };
+        // mockingoose(Article).toReturn(mockArticle, "findByIdAndUpdate");
+        // mockingoose(User).toReturn({USER_ID}, "getArticles");
+
         mockingoose(Article).toReturn(MOCK_ARTICLE_CREATED, "save");
-      
-        mockingoose(User).toReturn(MOCK_DATA, "find");
-        mockingoose(User).toReturn(MOCK_DATA_CREATED, "save");
+
+        mockingoose(Article).toReturn(createdArticle._id, "findById");
+
+        mockingoose(Article).toReturn((createdArticle._id,updatedArticle), "findByIdAndUpdate");
     });
 
     test("[Articles] Create article", async () => {
@@ -54,24 +46,18 @@ describe("Tester API articles", () => {
             .post("/api/articles")
             .send(MOCK_ARTICLE_CREATED)
             .set("x-access-token", token);
+        // createdArticleId = res.body._id;
+        createdArticle = res.body;
         expect(res.status).toBe(201);
         expect(res.body.title).toBe(MOCK_ARTICLE_CREATED.title);
         expect(res.body.content).toBe(MOCK_ARTICLE_CREATED.content);
-        createdArticleId = res.body._id;
     });
 
     test("[Articles] Update article", async () => {
-        const updatedArticle = {
-            title: "Nouveau titre",
-            content: "Nouveau contenu",
-            user:"",
-            status: "draft"
-        };
-        console.log(MOCK_ARTICLE_CREATED);
-        console.log(updatedArticle);
-
+        //Modification
         const res = await request(app)
-            .put(`/api/articles/${createdArticleId}`)
+            .put(`/api/articles/${createdArticle._id}`)
+            // .put(createdArticle)
             .set("x-access-token", token)
             .send(updatedArticle);
         expect(res.status).toBe(200);
